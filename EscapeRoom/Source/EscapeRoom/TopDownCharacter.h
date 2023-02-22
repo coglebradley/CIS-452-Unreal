@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InputActionValue.h"
 #include "TopDownCharacter.generated.h"
 
 UCLASS()
@@ -29,6 +30,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	class UInputAction* IA_Move;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	class UInputAction* IA_Jump;
 
 protected:
 
