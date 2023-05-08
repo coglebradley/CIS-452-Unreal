@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "VariableReplicationCharacter.h"
+#include "VariableReplication1Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,12 +9,13 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Net/UnrealNetwork.h"
 
 
 //////////////////////////////////////////////////////////////////////////
-// AVariableReplicationCharacter
+// AVariableReplication1Character
 
-AVariableReplicationCharacter::AVariableReplicationCharacter()
+AVariableReplication1Character::AVariableReplication1Character()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -51,7 +52,7 @@ AVariableReplicationCharacter::AVariableReplicationCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
-void AVariableReplicationCharacter::BeginPlay()
+void AVariableReplication1Character::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
@@ -66,10 +67,39 @@ void AVariableReplicationCharacter::BeginPlay()
 	}
 }
 
+void AVariableReplication1Character::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (HasAuthority())
+	{
+		A++;
+		B++;
+	}
+
+	const FString Values = FString::Printf(TEXT("[Conner Ogle]\nA = %.2f B = %d"), A, B);
+	DrawDebugString(GetWorld(), GetActorLocation(), Values, nullptr, FColor::White, 0.0f, true);
+}
+
+void AVariableReplication1Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AVariableReplication1Character, A);
+
+	DOREPLIFETIME_CONDITION(AVariableReplication1Character, B, COND_OwnerOnly);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void AVariableReplicationCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void AVariableReplication1Character::OnRepNotify_B()
+{
+	const FString String = FString::Printf(TEXT("B was changed by the server and is now %d!"), B);
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, String);
+}
+
+void AVariableReplication1Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
@@ -79,16 +109,16 @@ void AVariableReplicationCharacter::SetupPlayerInputComponent(class UInputCompon
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AVariableReplicationCharacter::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AVariableReplication1Character::Move);
 
 		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AVariableReplicationCharacter::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AVariableReplication1Character::Look);
 
 	}
 
 }
 
-void AVariableReplicationCharacter::Move(const FInputActionValue& Value)
+void AVariableReplication1Character::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -111,7 +141,7 @@ void AVariableReplicationCharacter::Move(const FInputActionValue& Value)
 	}
 }
 
-void AVariableReplicationCharacter::Look(const FInputActionValue& Value)
+void AVariableReplication1Character::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();

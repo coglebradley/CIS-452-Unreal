@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "VariableReplicationGameMode.generated.h"
+#include "VariableReplication1GameMode.generated.h"
 
 UCLASS(minimalapi)
-class AVariableReplicationGameMode : public AGameModeBase
+class AVariableReplication1GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	AVariableReplicationGameMode();
+	AVariableReplication1GameMode();
 };
 
 

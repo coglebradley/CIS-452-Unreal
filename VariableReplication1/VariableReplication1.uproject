@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "VariableReplication",
+			"Name": "VariableReplication1",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

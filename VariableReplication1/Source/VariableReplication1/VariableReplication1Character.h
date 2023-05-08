@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "VariableReplicationCharacter.generated.h"
+#include "VariableReplication1Character.generated.h"
 
 
 UCLASS(config=Game)
-class AVariableReplicationCharacter : public ACharacter
+class AVariableReplication1Character : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -38,7 +38,7 @@ class AVariableReplicationCharacter : public ACharacter
 	class UInputAction* LookAction;
 
 public:
-	AVariableReplicationCharacter();
+	AVariableReplication1Character();
 	
 
 protected:
@@ -48,6 +48,13 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	UPROPERTY(Replicated)
+		float A = 100.0f;
+	UPROPERTY(ReplicatedUsing = OnRepNotify_B)
+		int32 B;
+	UFUNCTION()
+		void OnRepNotify_B();
 			
 
 protected:
@@ -57,10 +64,11 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
-	UPROPERTY(Replicated)
-		float A = 100.0f;
-	UPROPERTY(ReplicatedUsing = OnRepNotify_B)
-		int32 B;
+	virtual void Tick(float DeltaTime) override;
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
+	
 
 public:
 	/** Returns CameraBoom subobject **/

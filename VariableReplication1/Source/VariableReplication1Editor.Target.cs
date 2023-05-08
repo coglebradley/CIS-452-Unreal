@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class VariableReplicationTarget : TargetRules
+public class VariableReplication1EditorTarget : TargetRules
 {
-	public VariableReplicationTarget(TargetInfo Target) : base(Target)
+	public VariableReplication1EditorTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Game;
+		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
-		ExtraModuleNames.Add("VariableReplication");
+		ExtraModuleNames.Add("VariableReplication1");
 	}
 }

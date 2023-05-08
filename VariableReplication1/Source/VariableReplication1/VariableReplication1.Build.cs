@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class VariableReplication : ModuleRules
+public class VariableReplication1 : ModuleRules
 {
-	public VariableReplication(ReadOnlyTargetRules Target) : base(Target)
+	public VariableReplication1(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
